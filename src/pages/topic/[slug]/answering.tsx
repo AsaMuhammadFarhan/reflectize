@@ -132,7 +132,7 @@ export default function TopicDetailPage({
             </Whitebox>
           ))}
           <Button
-            isDisabled={answers.some(a => a === null)}
+            isDisabled={answers.some(a => a === null) || answers.length === 0}
             isLoading={isSubmitting}
             colorScheme="blackAlpha"
             borderRadius="20px"
