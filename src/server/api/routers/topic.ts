@@ -238,4 +238,38 @@ export const topicRouter = createTRPCRouter({
       });
       return topic;
     }),
+
+  likeTopic: protectedProcedure
+    .input(
+      z.object({
+        slug: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { slug } = input;
+      const userId = ctx.session.id;
+
+      const topic = await ctx.prisma.topic.findFirst({
+        where: {
+          slug,
+        },
+      });
+      if (!topic) throw new Error("Topic not found.");
+
+      const temp = [...topic.likedByIds];
+      const userIdIndex = temp.findIndex((id) => id === userId);
+      if (userIdIndex > -1) {
+        temp.splice(userIdIndex, 1);
+      } else {
+        temp.push(userId);
+      }
+      return await ctx.prisma.topic.update({
+        where: {
+          slug,
+        },
+        data: {
+          likedByIds: temp,
+        },
+      });
+    }),
 });

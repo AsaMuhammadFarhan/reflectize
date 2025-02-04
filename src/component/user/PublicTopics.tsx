@@ -1,23 +1,13 @@
-import { Button, Center, HStack, Spacer, Stack, Text } from "@chakra-ui/react";
-import { TopicTheme } from "@prisma/client";
-import Whitebox from "../box/whitebox";
-import Iconify from "../appComponent/asset/Iconify";
-import Link from "next/link";
+import { Button, Center, Stack } from "@chakra-ui/react";
+import { Topic } from "@prisma/client";
 import { useState } from "react";
 import { api } from "~/utils/api";
-
-export type PublicTopicsGeneralData = {
-  title: string;
-  description: string | null;
-  slug: string;
-  likedByIds: string[];
-  theme: TopicTheme | null;
-}
+import TopicCard from "../box/TopicCard";
 
 export default function PublicTopics({
   ssrTopics,
 }: {
-  ssrTopics: PublicTopicsGeneralData[];
+  ssrTopics: Topic[];
 }) {
 
   const [topics, setTopics] = useState(ssrTopics ?? []);
@@ -33,17 +23,10 @@ export default function PublicTopics({
     getPublicBlogs({
       limit: 10,
       page: page + 1,
-    }).then(result => {
+    }).then(newTopics => {
       setPage(prev => prev + 1);
       setTopics(prev => {
         const temp = [...prev];
-        const newTopics: PublicTopicsGeneralData[] = result.map((topic) => ({
-          title: topic.title,
-          description: topic.description,
-          slug: topic.slug,
-          likedByIds: topic.likedByIds,
-          theme: topic.theme,
-        }));
         for (const topic of newTopics) {
           temp.push(topic);
         }
@@ -56,52 +39,10 @@ export default function PublicTopics({
   return (
     <Stack>
       {topics.map(topic => (
-        <Whitebox key={topic.slug}>
-          <Stack spacing="10px">
-            <HStack alignItems="start">
-              <Stack spacing="0px" w="100%">
-                <Text
-                  fontWeight="medium"
-                  fontSize="lg"
-                  noOfLines={2}
-                >
-                  {topic.title}
-                </Text>
-                <Text
-                  color="blackAlpha.500"
-                  noOfLines={3}
-                >
-                  {topic.description}
-                </Text>
-              </Stack>
-              <Iconify
-                icon="bx:bookmark"
-                cursor="pointer"
-              />
-            </HStack>
-            <HStack>
-              <Iconify
-                cursor="pointer"
-                icon="bx:like"
-              />
-              <Spacer />
-              <Link
-                href={`/topic/${topic.slug}`}
-                prefetch={false}
-              >
-                <Button
-                  colorScheme="blackAlpha"
-                  borderRadius="10px"
-                  bgColor="black"
-                  color="white"
-                  size="sm"
-                >
-                  Lihat Test
-                </Button>
-              </Link>
-            </HStack>
-          </Stack>
-        </Whitebox>
+        <TopicCard
+          key={topic.id}
+          topic={topic}
+        />
       ))}
       <Center w="100%">
         <Button
