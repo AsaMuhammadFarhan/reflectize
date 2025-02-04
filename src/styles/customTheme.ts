@@ -55,7 +55,7 @@ const tabsTheme = {
         },
       },
     },
-    "line": {
+    line: {
       tab: {
         color: "#404B5A",
         fontWeight: "600",
@@ -70,9 +70,10 @@ const tabsTheme = {
 };
 
 const fonts = {
-  heading: "Plus Jakarta Sans, sans-serif",
-  body: "Plus Jakarta Sans, sans-serif",
+  heading: "Geist, serif",
+  body: "Geist, serif",
   jakarta: "Plus Jakarta Sans, sans-serif",
+  satisfy: "Satisfy, serif",
 };
 
 const theme = extendTheme({

@@ -52,10 +52,10 @@ export default function LoginComponent() {
             fontWeight="bold"
             fontSize="3xl"
           >
-            Sign in to Hydrostatic
+            Sign in to <br /> <Text as="span" fontFamily="satisfy">Know Myself Better</Text>
           </Text>
           <Text color="blackAlpha.500">
-            Enter your email below to create your account
+            Enter your email and password below to log in to your account
           </Text>
         </Stack>
 

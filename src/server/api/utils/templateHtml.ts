@@ -14,8 +14,8 @@ export function getTemplateEmail({
   
   <head>
     <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
-    <title>WhiteLabel</title>
-    <meta name="description" content="WhiteLabel">
+    <title>Know Myself Better</title>
+    <meta name="description" content="Know Myself Better">
     <style type="text/css">
       a:hover { text-decoration: underline !important; }
     </style>
@@ -90,7 +90,7 @@ export function getTemplateEmail({
                   <tr>
                     <td style="padding:0 35px;">
                       <p style="color:#455056; font-size:15px;line-height:24px; margin:0;">
-                        WhiteLabel
+                        Know Myself Better
                       </p>
                     </td>
                   </tr>

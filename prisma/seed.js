@@ -7,7 +7,10 @@ async function main() {
     where: {
       email: "frost.75.asafarhan@gmail.com",
     },
-    update: {},
+    update: {
+      username: "admin",
+      password: await hash("admin"),
+    },
     create: {
       email: "frost.75.asafarhan@gmail.com",
       username: "admin",
@@ -16,8 +19,153 @@ async function main() {
       role: "ADMIN",
     },
   });
-  if (admin) console.log(`${admin.name} created`);
+  if (admin) console.log(`${admin.name} updated`);
 
+  const topic1 = await prisma.topic.upsert({
+    where: {
+      slug: "ronaldo-atau-messi",
+    },
+    create: {
+      slug: "ronaldo-atau-messi",
+      title: "Ronaldo atau Messi?",
+      preferPublication: true,
+      publishedAt: new Date(),
+      createdById: admin.id,
+    },
+    update: {
+      description: "Preferensi untuk lebih baik mendukung Ronaldo atau Messi.",
+    },
+  });
+  if (topic1) console.log(`${topic1.slug} exist`);
+  const countQuestions1 = await prisma.question.count({
+    where: {
+      topicId: topic1.id,
+    },
+  });
+  if (countQuestions1 === 0) {
+    const questions1 = [
+      "Apakah kamu suka pemain yang menunjukkan kerja keras dan disiplin sebagai kunci kesuksesan?",
+      "Apakah kamu lebih tertarik pada pemain yang punya gaya bermain kreatif dan penuh improvisasi?",
+      "Apakah kamu kagum dengan pemain yang sering mencetak gol dari situasi sulit atau tak terduga?",
+      "Apakah kamu lebih menghargai pemain yang terus berusaha meskipun menghadapi banyak kritik?",
+      "Apakah kamu suka pemain yang terlihat tenang dan tidak terlalu menunjukkan emosinya di lapangan?",
+      "Apakah kamu lebih suka pemain yang memiliki fisik kuat dan kecepatan tinggi?",
+      "Apakah kamu tertarik pada pemain yang lebih banyak berkontribusi lewat assist dan visi permainan?",
+      "Apakah kamu lebih suka pemain yang sering tampil percaya diri di luar maupun di dalam lapangan?",
+      "Apakah kamu menghargai pemain yang setia bermain untuk satu klub dalam waktu lama?",
+      "Apakah kamu lebih suka pemain yang sering tampil sebagai pemimpin yang vokal di timnya?",
+    ];
+    let order = 1;
+    for (const question of questions1) {
+      const created = await prisma.question.create({
+        data: {
+          order,
+          question,
+          topicId: topic1.id,
+        },
+      });
+      order++;
+      if (created) console.log(`topic1 question created`);
+    }
+  }
+
+  const topic2 = await prisma.topic.upsert({
+    where: {
+      slug: "cewe-manja-atau-alpha",
+    },
+    create: {
+      slug: "cewe-manja-atau-alpha",
+      title: "Suka Cewe Manja atau Alpha?",
+      preferPublication: true,
+      publishedAt: new Date(),
+      createdById: admin.id,
+    },
+    update: {},
+  });
+  if (topic2) console.log(`${topic2.slug} exist`);
+  const countQuestions2 = await prisma.question.count({
+    where: {
+      topicId: topic2.id,
+    },
+  });
+  if (countQuestions2 === 0) {
+    const questions2 = [
+      "Apakah Anda merasa nyaman ketika pasangan Anda meminta bantuan untuk hal-hal kecil yang sebenarnya bisa mereka lakukan sendiri?",
+      "Apakah Anda tertarik pada seseorang yang mengambil inisiatif dalam membuat keputusan penting dalam hubungan?",
+      "Apakah Anda merasa senang ketika pasangan menunjukkan ketergantungan emosional pada Anda?",
+      "Apakah Anda lebih suka jika pasangan Anda memiliki sikap dominan dalam perencanaan aktivitas bersama?",
+      "Apakah Anda menikmati peran sebagai pelindung atau orang yang diandalkan dalam hubungan?",
+      "Apakah Anda merasa tertarik pada pasangan yang memiliki ambisi besar dan kepercayaan diri tinggi?",
+      "Apakah Anda lebih suka pasangan yang sering meminta pendapat Anda sebelum mengambil keputusan, bahkan untuk hal-hal kecil?",
+      "Apakah Anda mengagumi pasangan yang bisa mengambil alih situasi saat ada masalah tanpa perlu banyak berdiskusi?",
+      "Apakah Anda merasa lebih terhubung secara emosional dengan pasangan yang sering mencari perhatian dari Anda?",
+      "Apakah Anda tertarik pada pasangan yang bisa menjaga kemandirian mereka tanpa terlalu mengandalkan orang lain?",
+    ];
+    let order = 1;
+    for (const question of questions2) {
+      const created = await prisma.question.create({
+        data: {
+          order,
+          question,
+          topicId: topic2.id,
+        },
+      });
+      order++;
+      if (created) console.log(`topic2 question created`);
+    }
+  }
+
+  const topic3 = await prisma.topic.upsert({
+    where: {
+      slug: "liburan-ke-gunung-atau-pantai",
+    },
+    create: {
+      slug: "liburan-ke-gunung-atau-pantai",
+      title: "Liburan ke Gunung atau Pantai?",
+      description:
+        "Di gunung sejuk, bisa barbeque-an, bisa menghirup udara segar. Di sisi lain ke pantai seru, bisa lihat pemandangan pesisir. Kira-kira aku lebih suka yang mana ya?",
+      likedByIds: [admin.id],
+      preferPublication: true,
+      publishedAt: new Date(),
+      createdById: admin.id,
+    },
+    update: {
+      description:
+        "Di gunung sejuk, bisa barbeque-an, bisa menghirup udara segar. Di sisi lain ke pantai seru, bisa lihat pemandangan pesisir. Kira-kira aku lebih suka yang mana ya?",
+    },
+  });
+  if (topic3) console.log(`${topic3.slug} exist`);
+  const countQuestions3 = await prisma.question.count({
+    where: {
+      topicId: topic3.id,
+    },
+  });
+  if (countQuestions3 === 0) {
+    const questions3 = [
+      "Apakah kamu suka menikmati pemandangan alam yang luas dan terbuka?",
+      "Apakah kamu merasa lebih rileks saat mendengar suara ombak atau air mengalir?",
+      "Apakah kamu senang berjalan kaki atau hiking di tempat yang menanjak?",
+      "Apakah kamu lebih suka cuaca yang hangat dan berangin daripada dingin dan sejuk?",
+      "Apakah kamu menikmati suasana tenang dan jauh dari keramaian saat liburan?",
+      "Apakah kamu suka merasakan pasir di kaki saat berjalan santai?",
+      "Apakah kamu merasa puas saat mencapai puncak setelah mendaki?",
+      "Apakah kamu lebih suka menghabiskan waktu dengan berjemur atau berenang?",
+      "Apakah kamu menikmati udara segar yang dingin di pagi hari?",
+      "Apakah kamu lebih suka menyaksikan matahari terbit dari ketinggian daripada dari tepi laut?",
+    ];
+    let order = 1;
+    for (const question of questions3) {
+      const created = await prisma.question.create({
+        data: {
+          order,
+          question,
+          topicId: topic3.id,
+        },
+      });
+      order++;
+      if (created) console.log(`topic3 question created`);
+    }
+  }
 }
 main()
   .then(async () => {

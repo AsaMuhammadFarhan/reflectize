@@ -11,23 +11,29 @@ import theme from "~/styles/customTheme";
 import { RecoilRoot } from "recoil";
 import { NextSeo } from "next-seo";
 
+import moment from "moment";
+import "moment/locale/id";
+
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
   pageProps: { session, ...pageProps },
 }) => {
+
+  moment.locale("id");
+  
   return (
     <SessionProvider session={session}>
       <RecoilRoot>
         <ChakraProvider theme={theme}>
           {/* <FunctionalErrorBoundary> */}
             <NextSeo
-              defaultTitle="WhiteLabel"
-              titleTemplate="WhiteLabel | %s"
-              description="WhiteLabel"
+              defaultTitle="Know Myself Better"
+              titleTemplate="Know Myself Better | %s"
+              description="Know Myself Better"
               additionalLinkTags={[
                 // {
                 //   rel: "shortcut icon",
-                //   href: "/WhiteLabel.png",
+                //   href: "/Know Myself Better.png",
                 //   type: "image/png",
                 // },
               ]}

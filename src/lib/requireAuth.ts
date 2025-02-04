@@ -9,7 +9,7 @@ export const requireAuth =
     if (!session) {
       return {
         redirect: {
-          destination: "/", // login path
+          destination: "/login", // login path
           permanent: false,
         },
       };
@@ -25,14 +25,14 @@ export const requireAuthAdmin =
     if (!session) {
       return {
         redirect: {
-          destination: "/", // login path
+          destination: "/login", // login path
           permanent: false,
         },
       };
     } else if (session.user.role != "ADMIN") {
       return {
         redirect: {
-          destination: "/", // login path
+          destination: "/login", // login path
           permanent: false,
         },
       };

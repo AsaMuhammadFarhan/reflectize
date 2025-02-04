@@ -1,6 +1,5 @@
 import { Center, Flex, HStack, Spacer, Stack, Text } from "@chakra-ui/react";
 import { ReactNode } from "react";
-import Iconify from "../appComponent/asset/Iconify";
 
 export default function RightLayout({
   children,
@@ -29,20 +28,19 @@ export default function RightLayout({
           p="20px"
         >
           <HStack spacing="10px">
-            <Iconify
-              icon="bxs:leaf"
-              boxSize="24px"
-            />
-            <Text fontWeight="bold">
-              WhiteLabel
+            <Text
+              fontFamily="satisfy"
+              fontWeight="bold"
+            >
+              Know Myself Better
             </Text>
           </HStack>
           <Spacer />
           <Text fontSize="lg">
-            "You become what you believe."
+            "Perjalanan seorang manusia bukanlah proses evolusi, tetapi untuk mengenal diri sendiri."
           </Text>
           <Text>
-            - Oprah Winfrey
+            - Roshan Sharma
           </Text>
         </Stack>
       </Flex>

@@ -55,6 +55,7 @@ enum Sex {
 model User {
   // Default
   id            String    @id @default(cuid())
+  name          String?
   username      String    @unique
   email         String?   @unique
   role          Role      @default(USER)
@@ -62,12 +63,13 @@ model User {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   emailVerified DateTime?
-  // Identity
-  name          String?
-  phoneNumber   String?
 
-  accounts Account[]
-  sessions Session[]
+  demographicDataId String?
+  demographicData   DemographicData?
+  accounts          Account[]
+  sessions          Session[]
+  topic             Topic[]
+  topicLog          TopicLog[]
 }
 
 model VerificationToken {
@@ -77,4 +79,87 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model Topic {
+  id          String   @id @default(cuid())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  title       String
+  description String?
+  slug        String   @unique
+
+  preferPublication Boolean
+  publishedAt       DateTime?
+  likedByIds        String[]  @default([])
+
+  createdById String
+  creator     User       @relation(fields: [createdById], references: [id])
+  question    Question[]
+  topicLog    TopicLog[]
+  Analysis    Analysis[]
+
+  @@index([createdById])
+}
+
+model Question {
+  id       String @id @default(cuid())
+  order    Int
+  question String
+
+  topicId String
+  topic   Topic  @relation(fields: [topicId], references: [id])
+
+  @@index([topicId])
+}
+
+model TopicLog {
+  id         String   @id @default(cuid())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  logAnswers String
+
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  topicId    String
+  topic      Topic    @relation(fields: [topicId], references: [id])
+  analysisId String
+  analysis   Analysis @relation(fields: [analysisId], references: [id])
+
+  @@index([userId])
+  @@index([topicId])
+  @@index([analysisId])
+}
+
+model Analysis {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  answerCode String
+  feedback   String
+
+  topicId  String
+  topic    Topic      @relation(fields: [topicId], references: [id])
+  topicLog TopicLog[]
+
+  @@index([topicId])
+}
+
+enum PreferenceTheme {
+  FAMILY
+  RELATIONSHIP
+  CAREER
+  HOBBY
+}
+
+model DemographicData {
+  id              String          @id @default(cuid())
+  objective       String
+  preferenceTheme PreferenceTheme
+  gender          Sex
+  ageRange        String
+
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id])
 }

@@ -174,12 +174,6 @@ export const fontStyle = {
   },
 };
 
-const fonts = {
-  heading: "Plus Jakarta Sans, sans-serif",
-  body: "Plus Jakarta Sans, sans-serif",
-  jakarta: "Plus Jakarta Sans, sans-serif",
-};
-
 type CustomFontStyle = {
   fontSize?: string;
   fontWeight?: number;
@@ -214,5 +208,3 @@ export function responsiveFontStyle(
     ],
   };
 }
-
-export default fonts;
