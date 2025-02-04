@@ -82,12 +82,12 @@ model VerificationToken {
 }
 
 model Topic {
-  id          String     @id @default(cuid())
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  id          String      @id @default(cuid())
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
   title       String
   description String?
-  slug        String     @unique
+  slug        String      @unique
   theme       TopicTheme?
 
   preferPublication Boolean
@@ -104,9 +104,10 @@ model Topic {
 }
 
 model Question {
-  id       String @id @default(cuid())
+  id       String   @id @default(cuid())
   order    Int
   question String
+  options  String[] @default(["Tidak", "Ya"])
 
   topicId String
   topic   Topic  @relation(fields: [topicId], references: [id])

@@ -51,4 +51,4 @@ export const themeQuestion = [
     icon: "mdi:palette-outline",
     value: "HOBBY",
   },
-];
+] as const;

@@ -36,12 +36,11 @@ export default function UserMenu() {
     {
       name: "Akun",
       menus: [
-        // {
-        //   name: "Topik Saya",
-        //   icon: "bxs:user",
-        //   link: "",
-        //   isDisabled: true,
-        // },
+        {
+          name: "Topik Saya",
+          icon: "bxs:user",
+          link: "/account/my-topic",
+        },
         {
           name: "Hasil Analisis",
           icon: "bxs:user-detail",

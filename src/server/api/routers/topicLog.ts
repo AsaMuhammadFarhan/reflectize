@@ -8,7 +8,7 @@ export const topicLogRouter = createTRPCRouter({
     .input(
       z.object({
         topicId: z.string(),
-        answers: z.array(z.boolean().nullable()),
+        answers: z.array(z.number().nullable()),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -51,12 +51,7 @@ export const topicLogRouter = createTRPCRouter({
 
         const mappedQuestionAndAnswer = questions.map((q, index) => {
           const answer = answers[index];
-          const answerText =
-            answer === true
-              ? "Ya"
-              : answer === false
-              ? "Tidak"
-              : "Tidak dijawab";
+          const answerText = answer ? q.options[answer] : "Tidak dijawab";
           return `${q.order}. ${q.question} ${answerText}.`;
         });
 

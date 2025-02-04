@@ -59,12 +59,12 @@ export default function TopicDetailPage({
 
   const topic: (Topic & { creator: User; }) | null = ssrTopic ? JSON.parse(ssrTopic) : null;
   const questions: Question[] = ssrQuestions ? JSON.parse(ssrQuestions) : [];
-  
+
   const createTopicLog = api.topicLog.createTopicLog.useMutation().mutateAsync;
-  const [answers, setAnswers] = useState<(boolean | null)[]>([]);
+  const [answers, setAnswers] = useState<(number | null)[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  function onClickAnswer(value: boolean, index: number) {
+  function onClickAnswer(value: number, index: number) {
     setAnswers(prev => {
       const temp = [...prev];
       if (temp.length < index) {
@@ -135,34 +135,22 @@ export default function TopicDetailPage({
                   </Text>
                 </HStack>
                 <HStack>
-                  <Button
-                    _hover={{
-                      bgColor: "black",
-                      color: "white",
-                    }}
-                    bgColor={answers[index] === false ? "black" : "white"}
-                    color={answers[index] === false ? "white" : "black"}
-                    onClick={() => onClickAnswer(false, index)}
-                    variant="outline"
-                    size="sm"
-                    w="100%"
-                  >
-                    Tidak
-                  </Button>
-                  <Button
-                    _hover={{
-                      bgColor: "black",
-                      color: "white",
-                    }}
-                    bgColor={answers[index] === true ? "black" : "white"}
-                    color={answers[index] === true ? "white" : "black"}
-                    onClick={() => onClickAnswer(true, index)}
-                    variant="outline"
-                    size="sm"
-                    w="100%"
-                  >
-                    Ya
-                  </Button>
+                  {question.options.map((option, optionIndex) => (
+                    <Button
+                      _hover={{
+                        bgColor: "black",
+                        color: "white",
+                      }}
+                      bgColor={answers[index] === optionIndex ? "black" : "white"}
+                      color={answers[index] === optionIndex ? "white" : "black"}
+                      onClick={() => onClickAnswer(optionIndex, index)}
+                      variant="outline"
+                      size="sm"
+                      w="100%"
+                    >
+                      {option}
+                    </Button>
+                  ))}
                 </HStack>
               </Stack>
             </Whitebox>

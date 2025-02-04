@@ -214,6 +214,85 @@ async function main() {
       if (created) console.log(`topic4 question created`);
     }
   }
+
+  const topic5 = await prisma.topic.upsert({
+    where: {
+      slug: "apa-karakterku-berdasarkan-trivia-islam",
+    },
+    create: {
+      slug: "apa-karakterku-berdasarkan-trivia-islam",
+      title: "Apa Karakterku Berdasarkan Trivia Islam?",
+      description:
+        "Trivia, pilih A atau B? Games menarik yang bisa kalian coba, sekaligus dapat mengenali diri kalian lebih dalam.",
+      likedByIds: [],
+      preferPublication: true,
+      publishedAt: new Date(),
+      createdById: admin.id,
+    },
+    update: {},
+  });
+  if (topic5) console.log(`${topic5.slug} exist`);
+  const countQuestions5 = await prisma.question.count({
+    where: {
+      topicId: topic5.id,
+    },
+  });
+  if (countQuestions5 === 0) {
+    const questions5 = [
+      {
+        question: "Abu Bakar atau Umar?",
+        options: ["Abu Bakar", "Umar"],
+      },
+      {
+        question: "Ali atau Utsman?",
+        options: ["Ali", "Utsman"],
+      },
+      {
+        question: "Sedekah uang atau sedekah tenaga?",
+        options: ["Uang", "Tenaga"],
+      },
+      {
+        question: "Sholat Dhuha atau Sholat Tahajud?",
+        options: ["Dhuha", "Tahajud"],
+      },
+      {
+        question: "Membaca Al-Qur'an atau memahami tafsirnya?",
+        options: ["Membaca", "Memahami"],
+      },
+      {
+        question: "Mendengarkan ceramah atau berdiskusi langsung?",
+        options: ["Ceramah", "Diskusi"],
+      },
+      {
+        question: "Sabar dalam musibah atau syukur dalam nikmat?",
+        options: ["Sabar", "Syukur"],
+      },
+      {
+        question: "Berdoa sendiri atau minta didoakan?",
+        options: ["Berdoa sendiri", "Minta didoakan"],
+      },
+      {
+        question: "Ilmu Fiqh atau Ilmu Akhlak?",
+        options: ["Ilmu Fiqh", "Ilmu Akhlak"],
+      },
+      {
+        question: "Berdakwah dengan tindakan atau dengan ucapan?",
+        options: ["Tindakan", "Ucapan"],
+      },
+    ];
+    let order = 1;
+    for (const question of questions5) {
+      const created = await prisma.question.create({
+        data: {
+          order,
+          question: question.question,
+          topicId: topic5.id,
+        },
+      });
+      order++;
+      if (created) console.log(`topic5 question created`);
+    }
+  }
 }
 main()
   .then(async () => {

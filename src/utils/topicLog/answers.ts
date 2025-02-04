@@ -1,6 +1,6 @@
-export function answersIntoString(array: (boolean | null)[]) {
+export function answersIntoString(array: (number | null)[]) {
   if (array.some((a) => a === null))
     throw new Error("Cannot convert null on answersIntoString().");
-  const result = array.map((a) => (a ? "1" : "0")).join(""); // [true,false,true] to "101"
+  const result = array.map((a) => a?.toString()).join(""); // [1,0,1] to "101"
   return result;
 }
