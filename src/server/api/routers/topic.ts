@@ -3,6 +3,7 @@ import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import { TopicTheme } from "@prisma/client";
 import slugify from "~/utils/slugify";
 import { randomStringNumber } from "~/utils/random/string";
+import { discordNewTopic } from "../utils/discord";
 
 export const topicRouter = createTRPCRouter({
   publicTopics: publicProcedure
@@ -224,7 +225,7 @@ export const topicRouter = createTRPCRouter({
             slug,
           },
         });
-      }
+      };
 
       const topic = await ctx.prisma.topic.create({
         data: {
@@ -236,6 +237,13 @@ export const topicRouter = createTRPCRouter({
           createdById: ctx.session.id,
         },
       });
+
+      await discordNewTopic({
+        topic,
+        name: ctx.session.user.name,
+        userId: ctx.session.id,
+      });
+
       return topic;
     }),
 

@@ -30,7 +30,6 @@ export default function LikeButton({
     }
   }
 
-
   return (
     <HStack>
       <Iconify

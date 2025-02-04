@@ -53,7 +53,7 @@ export default function UserMenu() {
         //   isDisabled: true,
         // },
         {
-          name: "Topik Saya",
+          name: "Keluar",
           children: <MenuItem
             onClick={() => signOut({ callbackUrl: "/login", redirect: true })}
             icon={Iconify({ icon: "bxs:log-out" })}

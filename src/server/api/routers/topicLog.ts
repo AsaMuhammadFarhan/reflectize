@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { answersIntoString } from "~/utils/topicLog/answers";
-import OpenAI from "openai";
+import callChatGPT from "../utils/openai/callFunction";
 
 export const topicLogRouter = createTRPCRouter({
   createTopicLog: protectedProcedure
@@ -51,68 +51,39 @@ export const topicLogRouter = createTRPCRouter({
 
         const mappedQuestionAndAnswer = questions.map((q, index) => {
           const answer = answers[index];
-          const answerText = answer ? q.options[answer] : "Tidak dijawab";
+          const answerText =
+            answer !== null && answer !== undefined
+              ? q.options[answer]
+              : "Tidak dijawab";
           return `${q.order}. ${q.question} ${answerText}.`;
         });
 
-        const userContent =
+        const chat =
           "Kamu adalah psikolog yang berbicara santai dengan menggunakan aku/kamu. " +
-          "Analisis jawaban berikut dan simpulkan dalam satu paragraf untuk pertanyaan: '" +
+          "Analisis jawaban berikut, jelaskan karakterku condong apa ketimbang apa, dan simpulkan dalam satu paragraf untuk pertanyaan: '" +
           topic?.title +
-          "'. Letakkan kesimpulan utama di kalimat pertama, sertakan persentase ketegasan. Jawaban: " +
+          "'. Letakkan kesimpulan utama di kalimat pertama. Jawaban: " +
           mappedQuestionAndAnswer;
 
-        try {
-          const client = new OpenAI({
-            apiKey: process.env.OPENAI_API_KEY,
-          });
-          const chatCompletion = await client.chat.completions.create({
-            messages: [{ role: "user", content: userContent }],
-            model: "gpt-4o-mini",
-          });
+        const feedback = await callChatGPT({ chat });
 
-          const feedback = chatCompletion.choices?.[0]?.message.content;
-          if (!feedback) throw new Error("Feedback cannot be empty!");
-          const createAnalysis = await ctx.prisma.analysis.create({
-            data: {
-              answerCode,
-              feedback,
-              topicId,
-            },
-          });
-          const topicLog = await ctx.prisma.topicLog.create({
-            data: {
-              topicId,
-              userId,
-              analysisId: createAnalysis.id,
-              logAnswers: answerCode,
-            },
-          });
-          return topicLog;
-        } catch (error) {
-          if (error instanceof OpenAI.APIError) {
-            if (
-              error.status === 402 &&
-              error.error?.code === "insufficient_quota"
-            ) {
-              console.error("OpenAI API quota exceeded:", error);
-              throw new Error(
-                "OpenAI API quota exceeded. Please check your billing."
-              );
-            } else if (
-              error.status === 401 &&
-              error.error?.code === "invalid_api_key"
-            ) {
-              console.error("Invalid OpenAI API Key:", error);
-              throw new Error("Invalid OpenAI API key provided.");
-            } else {
-              console.error("Unexpected Error calling OpenAI:", error);
-              throw new Error("Failed to generate feedback from OpenAI.");
-            }
-          }
-          console.error("Unexpected Error:", error);
-          throw new Error("An unexpected error occurred.");
-        }
+        if (!feedback) throw new Error("Feedback cannot be empty!");
+        const createAnalysis = await ctx.prisma.analysis.create({
+          data: {
+            answerCode,
+            feedback,
+            topicId,
+          },
+        });
+        const topicLog = await ctx.prisma.topicLog.create({
+          data: {
+            topicId,
+            userId,
+            analysisId: createAnalysis.id,
+            logAnswers: answerCode,
+          },
+        });
+        return topicLog;
       }
     }),
 

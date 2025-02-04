@@ -286,6 +286,7 @@ async function main() {
         data: {
           order,
           question: question.question,
+          options: question.options,
           topicId: topic5.id,
         },
       });

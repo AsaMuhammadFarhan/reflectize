@@ -22,6 +22,7 @@ export default function MyTopics() {
         <TopicCard
           key={topic.id}
           topic={topic}
+          showStatus
         />
       ))}
     </Stack>

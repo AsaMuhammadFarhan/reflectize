@@ -19,6 +19,7 @@ import {
   Text,
   Textarea,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import { TopicTheme } from "@prisma/client";
 import { useState } from "react";
@@ -29,7 +30,9 @@ import { themeQuestion } from "~/utils/verification/question";
 
 export default function CreateNewTopic() {
 
+  const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const createTopic = api.topic.createTopic.useMutation().mutateAsync;
   const [title, setTitle] = useState("");
@@ -38,12 +41,31 @@ export default function CreateNewTopic() {
   const [preferPublication, setPreferPublication] = useState(false);
 
   function onClickMake() {
+    setIsSubmitting(true);
     createTopic({
       title,
       description,
       theme,
       preferPublication,
-    })
+    }).catch(e => {
+      setIsSubmitting(false);
+      toast({
+        status: "error",
+        title: "Something went wrong",
+        description: e?.message ? e.message : e,
+        position: "top",
+      })
+    }).then((result) => {
+      if (result) {
+        toast({
+          status: "success",
+          title: "Success!",
+          description: "Berhasil mengusulkan topik!",
+          position: "top",
+        });
+      };
+      onClose();
+    });
     return;
   }
 
@@ -85,16 +107,10 @@ export default function CreateNewTopic() {
                           variant="flushed"
                         />
                       </Stack>
-                      <Iconify
-                        icon="bx:bookmark"
-                        cursor="pointer"
-                      />
+                      <Iconify icon="bx:bookmark" />
                     </HStack>
                     <HStack>
-                      <Iconify
-                        cursor="pointer"
-                        icon="bx:like"
-                      />
+                      <Iconify icon="bx:like" />
                       <Spacer />
                       <Button
                         colorScheme="blackAlpha"
@@ -144,6 +160,7 @@ export default function CreateNewTopic() {
             <Center w="100%">
               <Button
                 colorScheme="blackAlpha"
+                isLoading={isSubmitting}
                 onClick={onClickMake}
                 bgColor="black"
                 color="white"

@@ -1,7 +1,7 @@
-import { Button, HStack, Skeleton, Stack, Text, useToast } from "@chakra-ui/react";
+import { Button, HStack, Stack, Text, useToast } from "@chakra-ui/react";
 import { Question, Topic, User } from "@prisma/client";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Whitebox from "~/component/box/whitebox";
 import UserBasicLayout from "~/component/layout/UserBasicLayout";
 import { requireAuth } from "~/lib/requireAuth";
@@ -61,10 +61,10 @@ export default function TopicDetailPage({
   const questions: Question[] = ssrQuestions ? JSON.parse(ssrQuestions) : [];
 
   const createTopicLog = api.topicLog.createTopicLog.useMutation().mutateAsync;
-  const [answers, setAnswers] = useState<(number | null)[]>([]);
+  const [answers, setAnswers] = useState<(number | null)[]>(Array(questions.length).fill(null));
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  function onClickAnswer(value: number, index: number) {
+  async function onClickAnswer(value: number, index: number) {
     setAnswers(prev => {
       const temp = [...prev];
       if (temp.length < index) {
@@ -102,11 +102,6 @@ export default function TopicDetailPage({
       }
     });
   }
-  useEffect(() => {
-    if (questions.length > 0) {
-      setAnswers(Array(questions.length).fill(null));
-    }
-  }, [questions]);
 
   return (
     <UserBasicLayout>
@@ -121,7 +116,7 @@ export default function TopicDetailPage({
         </Whitebox>
         <Stack>
           {questions.length > 0 ? questions.map((question, index) => (
-            <Whitebox>
+            <Whitebox key={question.id}>
               <Stack>
                 <HStack
                   alignItems="start"
@@ -134,7 +129,7 @@ export default function TopicDetailPage({
                     {question.question}
                   </Text>
                 </HStack>
-                <HStack>
+                <HStack justify="space-between">
                   {question.options.map((option, optionIndex) => (
                     <Button
                       _hover={{
@@ -145,8 +140,9 @@ export default function TopicDetailPage({
                       color={answers[index] === optionIndex ? "white" : "black"}
                       onClick={() => onClickAnswer(optionIndex, index)}
                       variant="outline"
+                      minW="120px"
+                      key={option}
                       size="sm"
-                      w="100%"
                     >
                       {option}
                     </Button>
@@ -155,58 +151,11 @@ export default function TopicDetailPage({
               </Stack>
             </Whitebox>
           )) : (
-            <>
-              <Skeleton borderRadius="20px">
-                <Whitebox>
-                  <Text>A</Text>
-                </Whitebox>
-              </Skeleton>
-              <Skeleton borderRadius="20px">
-                <Whitebox>
-                  <Text>A</Text>
-                </Whitebox>
-              </Skeleton>
-              <Skeleton borderRadius="20px">
-                <Whitebox>
-                  <Text>A</Text>
-                </Whitebox>
-              </Skeleton>
-              <Skeleton borderRadius="20px">
-                <Whitebox>
-                  <Text>A</Text>
-                </Whitebox>
-              </Skeleton>
-              <Skeleton borderRadius="20px">
-                <Whitebox>
-                  <Text>A</Text>
-                </Whitebox>
-              </Skeleton>
-              <Skeleton borderRadius="20px">
-                <Whitebox>
-                  <Text>A</Text>
-                </Whitebox>
-              </Skeleton>
-              <Skeleton borderRadius="20px">
-                <Whitebox>
-                  <Text>A</Text>
-                </Whitebox>
-              </Skeleton>
-              <Skeleton borderRadius="20px">
-                <Whitebox>
-                  <Text>A</Text>
-                </Whitebox>
-              </Skeleton>
-              <Skeleton borderRadius="20px">
-                <Whitebox>
-                  <Text>A</Text>
-                </Whitebox>
-              </Skeleton>
-              <Skeleton borderRadius="20px">
-                <Whitebox>
-                  <Text>A</Text>
-                </Whitebox>
-              </Skeleton>
-            </>
+            <Whitebox>
+              <Text>
+                Pertanyaan tidak ditemukan.
+              </Text>
+            </Whitebox>
           )}
           <Button
             isDisabled={answers.some(a => a === null) || answers.length === 0}
