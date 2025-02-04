@@ -1,4 +1,5 @@
 import { Button, HStack, Stack, Text } from "@chakra-ui/react";
+import { Topic, User } from "@prisma/client";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import Iconify from "~/component/appComponent/asset/Iconify";
@@ -6,23 +7,41 @@ import ShareComponent from "~/component/appComponent/share";
 import Whitebox from "~/component/box/whitebox";
 import UserBasicLayout from "~/component/layout/UserBasicLayout";
 import { requireAuth } from "~/lib/requireAuth";
-import { api } from "~/utils/api";
+import { prisma } from "~/server/db";
+import { getRouterQueryAsString } from "~/utils/router";
 
-export const getServerSideProps = requireAuth((context) => {
+export const getServerSideProps = requireAuth(async (context) => {
   const { slug } = context.query;
-  return Promise.resolve({
-    props: { slug }
+  const ssrTopic = await prisma.topic.findFirst({
+    where: {
+      slug: getRouterQueryAsString(slug),
+      publishedAt: {
+        not: null,
+      },
+    },
+    include: {
+      creator: true,
+    }
   });
+
+  return {
+    props: {
+      slug,
+      ssrTopic: ssrTopic ? JSON.stringify(ssrTopic) : null,
+    }
+  };
 });
 
 export default function TopicDetailPage({
   slug,
+  ssrTopic,
 }: {
   slug: string;
+  ssrTopic: string | null;
 }) {
 
   const router = useRouter();
-  const topic = api.topic.publicTopicBySlug.useQuery({ slug }).data;
+  const topic: (Topic & { creator: User; }) | null = ssrTopic ? JSON.parse(ssrTopic) : null;
 
   function onClickStart() {
     router.push(`/topic/${slug}/answering`);

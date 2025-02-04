@@ -1,30 +1,66 @@
 import { Button, HStack, Skeleton, Stack, Text, useToast } from "@chakra-ui/react";
+import { Question, Topic, User } from "@prisma/client";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Whitebox from "~/component/box/whitebox";
 import UserBasicLayout from "~/component/layout/UserBasicLayout";
 import { requireAuth } from "~/lib/requireAuth";
+import { prisma } from "~/server/db";
 import { api } from "~/utils/api";
+import { getRouterQueryAsString } from "~/utils/router";
 
-export const getServerSideProps = requireAuth((context) => {
+export const getServerSideProps = requireAuth(async (context) => {
   const { slug } = context.query;
-  return Promise.resolve({
-    props: { slug }
+  const ssrTopic = await prisma.topic.findFirst({
+    where: {
+      slug: getRouterQueryAsString(slug),
+      publishedAt: {
+        not: null,
+      },
+    },
+    include: {
+      creator: true,
+    }
   });
+
+  if (!ssrTopic) return {
+    props: {
+      ssrTopic: null,
+      ssrQuestions: null,
+    }
+  }
+
+  const ssrQuestions = await prisma.question.findMany({
+    where: {
+      topicId: ssrTopic?.id
+    },
+    orderBy: {
+      order: "asc"
+    }
+  })
+
+  return {
+    props: {
+      ssrTopic: JSON.stringify(ssrTopic),
+      ssrQuestions: ssrQuestions ? JSON.stringify(ssrQuestions) : null,
+    }
+  };
 });
 
 export default function TopicDetailPage({
-  slug,
+  ssrTopic,
+  ssrQuestions,
 }: {
-  slug: string;
+  ssrTopic: string | null;
+  ssrQuestions: string | null;
 }) {
   const toast = useToast();
   const router = useRouter();
 
-  const topic = api.topic.publicTopicBySlug.useQuery({ slug }).data;
-  const questions = api.question.questionsByTopicSlug.useQuery({ slug }).data ?? [];
+  const topic: (Topic & { creator: User; }) | null = ssrTopic ? JSON.parse(ssrTopic) : null;
+  const questions: Question[] = ssrQuestions ? JSON.parse(ssrQuestions) : [];
+  
   const createTopicLog = api.topicLog.createTopicLog.useMutation().mutateAsync;
-
   const [answers, setAnswers] = useState<(boolean | null)[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 

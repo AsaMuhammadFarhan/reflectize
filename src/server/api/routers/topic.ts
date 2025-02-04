@@ -42,6 +42,79 @@ export const topicRouter = createTRPCRouter({
         },
       });
     }),
+  getPublicTopics: publicProcedure
+    .input(
+      z.object({
+        limit: z.number().optional().default(5),
+        page: z.number().optional().default(0),
+        search: z.string().optional(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      return await ctx.prisma.topic.findMany({
+        where: {
+          AND: [
+            {
+              OR: [
+                { title: { contains: input.search, mode: "insensitive" } },
+                { slug: { contains: input.search, mode: "insensitive" } },
+                {
+                  description: { contains: input.search, mode: "insensitive" },
+                },
+              ],
+            },
+            {
+              AND: [
+                {
+                  publishedAt: { not: null },
+                },
+                {
+                  preferPublication: true,
+                },
+              ],
+            },
+          ],
+        },
+        take: input.limit,
+        skip: input.page * input.limit,
+        orderBy: {
+          createdAt: "desc",
+        },
+      });
+    }),
+  countPublicTopics: publicProcedure
+    .input(
+      z.object({
+        search: z.string().optional(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      return await ctx.prisma.topic.count({
+        where: {
+          AND: [
+            {
+              OR: [
+                { title: { contains: input.search, mode: "insensitive" } },
+                { slug: { contains: input.search, mode: "insensitive" } },
+                {
+                  description: { contains: input.search, mode: "insensitive" },
+                },
+              ],
+            },
+            {
+              AND: [
+                {
+                  publishedAt: { not: null },
+                },
+                {
+                  preferPublication: true,
+                },
+              ],
+            },
+          ],
+        },
+      });
+    }),
 
   publicTopicBySlug: publicProcedure
     .input(

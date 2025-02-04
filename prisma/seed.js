@@ -8,8 +8,8 @@ async function main() {
       email: "frost.75.asafarhan@gmail.com",
     },
     update: {
-      username: "admin",
-      password: await hash("admin"),
+      username: "reflectize",
+      password: await hash("reflectize123"),
     },
     create: {
       email: "frost.75.asafarhan@gmail.com",

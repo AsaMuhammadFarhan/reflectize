@@ -1,64 +1,49 @@
-import { Button, HStack, Spacer, Stack, Text } from "@chakra-ui/react";
-import Link from "next/link";
-import Iconify from "~/component/appComponent/asset/Iconify";
-import Whitebox from "~/component/box/whitebox";
+import { GetServerSideProps } from "next";
 import UserBasicLayout from "~/component/layout/UserBasicLayout";
-import { api } from "~/utils/api";
+import PublicTopics, { PublicTopicsGeneralData } from "~/component/user/PublicTopics";
+import { prisma } from "~/server/db";
 
-const IndexPage = () => {
-  const topics = api.topic.publicTopics.useQuery({ limit: 50 }).data ?? [];
+export const getServerSideProps: GetServerSideProps = async () => {
+  const publicTopics = await prisma.topic.findMany({
+    where: {
+      AND: [
+        {
+          publishedAt: { not: null },
+        },
+        {
+          preferPublication: true,
+        },
+      ],
+    },
+    take: 10,
+    skip: 0,
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+  const topics: PublicTopicsGeneralData[] = publicTopics.map((topic) => ({
+    title: topic.title,
+    description: topic.description,
+    slug: topic.slug,
+    likedByIds: topic.likedByIds,
+    theme: topic.theme,
+  }));
+
+  return {
+    props: {
+      topics,
+    },
+  };
+};
+
+const IndexPage = ({
+  topics = []
+}: {
+  topics: PublicTopicsGeneralData[],
+}) => {
   return (
     <UserBasicLayout>
-      <Stack>
-        {topics.map(topic => (
-          <Whitebox key={topic.slug}>
-            <Stack spacing="10px">
-              <HStack alignItems="start">
-                <Stack spacing="0px" w="100%">
-                  <Text
-                    fontWeight="medium"
-                    fontSize="lg"
-                    noOfLines={2}
-                  >
-                    {topic.title}
-                  </Text>
-                  <Text
-                    color="blackAlpha.500"
-                    noOfLines={3}
-                  >
-                    {topic.description}
-                  </Text>
-                </Stack>
-                <Iconify
-                  icon="bx:bookmark"
-                  cursor="pointer"
-                />
-              </HStack>
-              <HStack>
-                <Iconify
-                  cursor="pointer"
-                  icon="bx:like"
-                />
-                <Spacer />
-                <Link
-                  href={`/topic/${topic.slug}`}
-                  prefetch={false}
-                >
-                  <Button
-                    colorScheme="blackAlpha"
-                    borderRadius="10px"
-                    bgColor="black"
-                    color="white"
-                    size="sm"
-                  >
-                    Lihat Test
-                  </Button>
-                </Link>
-              </HStack>
-            </Stack>
-          </Whitebox>
-        ))}
-      </Stack>
+      <PublicTopics ssrTopics={topics} />
     </UserBasicLayout>
   );
 };

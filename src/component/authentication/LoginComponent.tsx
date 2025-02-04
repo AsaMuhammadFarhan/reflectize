@@ -3,6 +3,7 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import RegisterPopup from "./RegisterPopup";
+import isJson from "~/utils/format/isJson";
 
 export default function LoginComponent() {
   const toast = useToast();
@@ -21,14 +22,14 @@ export default function LoginComponent() {
     });
     setIsSigning.off();
     if (response?.error) {
-      const errorMessage = await JSON.parse(response.error);
+      const errorMessage = isJson(response.error) ? await JSON.parse(response.error) : response.error;
       toast({
         status: "error",
         title: "Invalid Credentials",
         position: "top",
         description: Array.isArray(errorMessage) ? errorMessage.map(e => e.message).join("; ") : response.error
       });
-      return
+      return;
     }
     router.push("/");
   }
