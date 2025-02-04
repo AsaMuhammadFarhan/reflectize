@@ -1,4 +1,4 @@
-import { Button, HStack, Stack, Text, useToast } from "@chakra-ui/react";
+import { Button, HStack, Skeleton, Stack, Text, useToast } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Whitebox from "~/component/box/whitebox";
@@ -84,7 +84,7 @@ export default function TopicDetailPage({
           </Stack>
         </Whitebox>
         <Stack>
-          {questions.map((question, index) => (
+          {questions.length > 0 ? questions.map((question, index) => (
             <Whitebox>
               <Stack>
                 <HStack
@@ -130,7 +130,60 @@ export default function TopicDetailPage({
                 </HStack>
               </Stack>
             </Whitebox>
-          ))}
+          )) : (
+            <>
+              <Skeleton borderRadius="20px">
+                <Whitebox>
+                  <Text>A</Text>
+                </Whitebox>
+              </Skeleton>
+              <Skeleton borderRadius="20px">
+                <Whitebox>
+                  <Text>A</Text>
+                </Whitebox>
+              </Skeleton>
+              <Skeleton borderRadius="20px">
+                <Whitebox>
+                  <Text>A</Text>
+                </Whitebox>
+              </Skeleton>
+              <Skeleton borderRadius="20px">
+                <Whitebox>
+                  <Text>A</Text>
+                </Whitebox>
+              </Skeleton>
+              <Skeleton borderRadius="20px">
+                <Whitebox>
+                  <Text>A</Text>
+                </Whitebox>
+              </Skeleton>
+              <Skeleton borderRadius="20px">
+                <Whitebox>
+                  <Text>A</Text>
+                </Whitebox>
+              </Skeleton>
+              <Skeleton borderRadius="20px">
+                <Whitebox>
+                  <Text>A</Text>
+                </Whitebox>
+              </Skeleton>
+              <Skeleton borderRadius="20px">
+                <Whitebox>
+                  <Text>A</Text>
+                </Whitebox>
+              </Skeleton>
+              <Skeleton borderRadius="20px">
+                <Whitebox>
+                  <Text>A</Text>
+                </Whitebox>
+              </Skeleton>
+              <Skeleton borderRadius="20px">
+                <Whitebox>
+                  <Text>A</Text>
+                </Whitebox>
+              </Skeleton>
+            </>
+          )}
           <Button
             isDisabled={answers.some(a => a === null) || answers.length === 0}
             isLoading={isSubmitting}

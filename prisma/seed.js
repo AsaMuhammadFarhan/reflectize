@@ -166,6 +166,54 @@ async function main() {
       if (created) console.log(`topic3 question created`);
     }
   }
+  const topic4 = await prisma.topic.upsert({
+    where: {
+      slug: "kalau-aku-adalah-buah-aku-buah-apa",
+    },
+    create: {
+      slug: "kalau-aku-adalah-buah-aku-buah-apa",
+      title: "Kalau aku adalah buah, aku buah apa?",
+      description:
+        "Penyihir mengutukmu menjadi buah sesuai dengan kepribadianmu. Tebak, kamu menjadi buah apa?",
+      likedByIds: [],
+      preferPublication: true,
+      publishedAt: new Date(),
+      createdById: admin.id,
+    },
+    update: {},
+  });
+  if (topic4) console.log(`${topic4.slug} exist`);
+  const countQuestions4 = await prisma.question.count({
+    where: {
+      topicId: topic4.id,
+    },
+  });
+  if (countQuestions4 === 0) {
+    const questions4 = [
+      "Apakah kamu lebih suka berada di lingkungan yang ramai dan penuh aktivitas?",
+      "Apakah kamu merasa nyaman jadi pusat perhatian di antara teman-temanmu?",
+      "Apakah kamu lebih suka hal-hal yang sederhana tapi punya makna mendalam?",
+      "Apakah kamu cenderung mudah beradaptasi dengan situasi baru?",
+      "Apakah kamu suka tantangan dan mencoba hal-hal yang belum pernah kamu lakukan sebelumnya?",
+      "Apakah kamu lebih suka sesuatu yang manis daripada yang asam atau pahit?",
+      "Apakah kamu merasa puas ketika bisa membantu orang lain merasa lebih baik?",
+      "Apakah kamu lebih suka suasana santai daripada yang terlalu formal?",
+      "Apakah kamu sering dianggap orang yang ceria dan mudah bergaul?",
+      "Apakah kamu merasa lebih nyaman ketika segalanya berjalan sesuai rencana daripada tiba-tiba berubah?",
+    ];
+    let order = 1;
+    for (const question of questions4) {
+      const created = await prisma.question.create({
+        data: {
+          order,
+          question,
+          topicId: topic4.id,
+        },
+      });
+      order++;
+      if (created) console.log(`topic4 question created`);
+    }
+  }
 }
 main()
   .then(async () => {

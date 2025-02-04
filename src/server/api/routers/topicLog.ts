@@ -62,9 +62,10 @@ export const topicLogRouter = createTRPCRouter({
 
         const userContent =
           "kamu adalah psikolog, namun lebih suka menggunakan kata aku/kamu ketimbang saya/anda. " +
-          "kamu sudah memberikan user beberapa pertanyaan psikologi ya/tidak yang menjawab apakah " +
+          "kamu sudah memberikan user beberapa pertanyaan psikologi ya/tidak yang menjawab pertanyaan " +
           topic?.title +
-          ". berdasarkan jawaban ini silahkan berikan hasil analisis dan feedback dalam satu paragraf: " +
+          ". berikan kesimpulan di awal paragraf dan persentase nilai ketegasan pada kesimpulan tersebut. " +
+          "berdasarkan jawaban ini silahkan berikan hasil analisis dan feedback dalam satu paragraf: " +
           mappedQuestionAndAnswer;
 
         try {
