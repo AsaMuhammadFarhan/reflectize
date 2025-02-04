@@ -96,11 +96,15 @@ export const authOptions: NextAuthOptions = {
               OR: [
                 { email: creds.usernameOrEmail },
                 { username: creds.usernameOrEmail },
-              ]
+              ],
             },
           });
           if (!user) {
             throw new Error("No user found with the provided email");
+          }
+
+          if (!user.password) {
+            throw new Error("User have not verified");
           }
 
           const isValidPassword = await verify(user.password, creds.password);

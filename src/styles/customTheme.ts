@@ -9,6 +9,7 @@ import colors from "./colorTheme";
 import { textareaTheme } from "./textarea";
 import buttonTheme from "./buttonTheme";
 import { radioTheme } from "./radio";
+import { checkboxTheme } from "./checkbox";
 
 const { definePartsStyle, defineMultiStyleConfig } =
   createMultiStyleConfigHelpers(parts.keys);
@@ -87,6 +88,7 @@ const theme = extendTheme({
     Select: selectTheme,
     Textarea: textareaTheme,
     Radio: radioTheme,
+    Checkbox: checkboxTheme,
   },
 });
 

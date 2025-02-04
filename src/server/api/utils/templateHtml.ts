@@ -11,112 +11,71 @@ export function getTemplateEmail({
 }) {
   return `<!doctype html>
   <html lang="en-US">
-  
+
   <head>
-    <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Know Myself Better</title>
-    <meta name="description" content="Know Myself Better">
-    <style type="text/css">
-      a:hover { text-decoration: underline !important; }
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #ffffff;
+        font-family: 'Arial', sans-serif;
+        color: #000000;
+      }
+      .container {
+        max-width: 670px;
+        margin: 40px auto;
+        background: #ffffff;
+        border: 1px solid #000000;
+        border-radius: 5px;
+        padding: 30px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        font-size: 28px;
+        margin-bottom: 20px;
+      }
+      p {
+        font-size: 16px;
+        line-height: 1.5;
+        margin-bottom: 15px;
+      }
+      a {
+        color: #000000;
+        text-decoration: none;
+        font-weight: bold;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+      .footer {
+        text-align: center;
+        font-size: 14px;
+        margin-top: 30px;
+      }
     </style>
   </head>
-  
-  <body marginheight="0" topmargin="0" marginwidth="0" style="margin: 0px; background-color: #f2f3f8;" leftmargin="0">
-    <!--100% body table-->
-    <table cellspacing="0" border="0" cellpadding="0" width="100%" bgcolor="#f2f3f8"
-      style="@import url(https://fonts.googleapis.com/css?family=Rubik:300,400,500,700|Open+Sans:300,400,600,700); font-family: 'Open Sans', sans-serif;">
-      <tr>
-        <td>
-          <table style="background-color: #f2f3f8; max-width:670px;  margin:0 auto;" width="100%" border="0" align="center"
-            cellpadding="0" cellspacing="0">
-            <tr>
-              <td style="height:80px;">&nbsp;</td>
-            </tr>
-            <tr>
-              <td>
-                <table width="95%" border="0" align="center" cellpadding="0" cellspacing="0"
-                  style="max-width:670px;background:#fff; border-radius:3px; text-align:left;-webkit-box-shadow:0 6px 18px 0 rgba(0,0,0,.06);-moz-box-shadow:0 6px 18px 0 rgba(0,0,0,.06);box-shadow:0 6px 18px 0 rgba(0,0,0,.06);">
-                  <tr>
-                    <td style="height:40px;">&nbsp;</td>
-                  </tr>
-                  <tr>
-                    <td style="padding:0 35px;">
-                      <h1 style="color:#1e1e2d; font-weight:500; margin:0;font-size:32px;font-family:'Rubik',sans-serif;">
-                        ${header}
-                      </h1>
-                      <span
-                        style="display:inline-block; vertical-align:middle; margin:29px 0 26px; border-bottom:1px solid #cecece; width:100px;"></span>
-                      <p style="color:#455056; font-size:15px;line-height:24px; margin:0;">
-                        ${body}
-                      </p>
-                    </td>
-                  </tr>
-                  ${
-                    addons
-                      ? addons.map(
-                          (addon) => `<tr>
-                      <td style="height:40px;">&nbsp;</td>
-                    </tr>
-                    <tr>
-                      <td style="padding:0 35px;">
-                        <p style="color:#455056; font-size:15px;line-height:24px; margin:0;">
-                          ${addon}
-                        </p>
-                      </td>
-                    </tr>`
-                        )
-                      : ""
-                  }
-                  ${
-                    hyperlink
-                      ? `<tr>
-                    <td style="height:40px;">&nbsp;</td>
-                  </tr>
-                  <tr>
-                    <td style="padding:0 35px;">
-                      <p style="color:#455056; font-size:15px;line-height:24px; margin:0;">
-                        ${hyperlink.title}
-                      </p>
-                      <a href="${hyperlink.link}">
-                        Click Here
-                      </a>
-                    </td>
-                  </tr>`
-                      : ""
-                  }
-                  <tr>
-                    <td style="height:40px;">&nbsp;</td>
-                  </tr>
-                  <tr>
-                    <td style="padding:0 35px;">
-                      <p style="color:#455056; font-size:15px;line-height:24px; margin:0;">
-                        Know Myself Better
-                      </p>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style="height:40px;">&nbsp;</td>
-                  </tr>
-                </table>
-              </td>
-            <tr>
-              <td style="height:20px;">&nbsp;</td>
-            </tr>
-            <tr>
-              <td style="text-align:center;">
-                <p style="font-size:14px; color:rgba(69, 80, 86, 0.7411764705882353); line-height:18px; margin:0 0 0;">
-                  &copy; <strong>${process.env.NEXTAUTH_URL}</strong></p>
-              </td>
-            </tr>
-            <tr>
-              <td style="height:80px;">&nbsp;</td>
-            </tr>
-          </table>
-        </td>
-      </tr>
-    </table>
-    <!--/100% body table-->
+
+  <body>
+    <div class="container">
+      <h1>${header}</h1>
+      <p>${body}</p>
+      ${addons ? addons.map((addon) => `<p>${addon}</p>`).join("") : ""}
+      ${
+        hyperlink
+          ? `<p>${hyperlink.title}</p>
+           <a href="${hyperlink.link}">Click Here</a>`
+          : ""
+      }
+      <p>Know Myself Better</p>
+    </div>
+    <div class="footer">
+      &copy; <strong>${process.env.NEXTAUTH_URL}</strong>
+    </div>
   </body>
-  
+
   </html>`;
 }

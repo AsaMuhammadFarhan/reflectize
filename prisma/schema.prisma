@@ -47,7 +47,7 @@ enum Role {
   USER
 }
 
-enum Sex {
+enum Gender {
   MALE
   FEMALE
 }
@@ -55,11 +55,11 @@ enum Sex {
 model User {
   // Default
   id            String    @id @default(cuid())
-  name          String?
+  name          String
   username      String    @unique
-  email         String?   @unique
+  email         String    @unique
   role          Role      @default(USER)
-  password      String
+  password      String?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   emailVerified DateTime?
@@ -74,20 +74,21 @@ model User {
 
 model VerificationToken {
   id         Int      @id @default(autoincrement())
-  identifier String
-  token      String   @unique
+  identifier String   @unique
+  token      String
   expires    DateTime
 
   @@unique([identifier, token])
 }
 
 model Topic {
-  id          String   @id @default(cuid())
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id          String     @id @default(cuid())
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
   title       String
   description String?
-  slug        String   @unique
+  slug        String     @unique
+  theme       TopicTheme?
 
   preferPublication Boolean
   publishedAt       DateTime?
@@ -146,7 +147,7 @@ model Analysis {
   @@index([topicId])
 }
 
-enum PreferenceTheme {
+enum TopicTheme {
   FAMILY
   RELATIONSHIP
   CAREER
@@ -154,10 +155,10 @@ enum PreferenceTheme {
 }
 
 model DemographicData {
-  id              String          @id @default(cuid())
+  id              String     @id @default(cuid())
   objective       String
-  preferenceTheme PreferenceTheme
-  gender          Sex
+  preferenceTheme TopicTheme
+  gender          Gender
   ageRange        String
 
   userId String @unique

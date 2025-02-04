@@ -1,10 +1,10 @@
-import { Button, Input, Link, Stack, Text, useBoolean, useToast } from "@chakra-ui/react";
+import { Button, Divider, HStack, Input, Link, Stack, Text, useBoolean, useToast } from "@chakra-ui/react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useState } from "react";
+import RegisterPopup from "./RegisterPopup";
 
 export default function LoginComponent() {
-
   const toast = useToast();
   const router = useRouter();
 
@@ -30,7 +30,7 @@ export default function LoginComponent() {
       });
       return
     }
-    router.push("/admin/dashboard");
+    router.push("/");
   }
 
   return (
@@ -95,13 +95,26 @@ export default function LoginComponent() {
           textAlign="center"
           fontSize="sm"
         >
-          By signing in, you agree to our <Link fontWeight="medium" color="blackAlpha.900">
-            Terms of Service
-          </Link> and <Link fontWeight="medium" color="blackAlpha.900">
+          By signing in, you agree to our <Link
+            // href="/term-and-service"
+            color="blackAlpha.900"
+            fontWeight="medium"
+          >Terms of Service</Link> and <Link
+            // href="/privacy-policy"
+            color="blackAlpha.900"
+            fontWeight="medium"
+          >
             Privacy Policy
           </Link>.
         </Text>
 
+        <HStack w="100%">
+          <Divider w="100%" />
+          <Text>OR</Text>
+          <Divider w="100%" />
+        </HStack>
+
+        <RegisterPopup />
       </Stack>
     </>
   )
