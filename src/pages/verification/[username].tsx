@@ -38,7 +38,7 @@ export default function VerificationPage({ username }: { username: string }) {
   const [ageRange, setAgeRange] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
-  const [pin, setPin] = useState("");
+  const [otp, setOtp] = useState("");
 
   const verifyUser = api.user.verifyToken.useMutation();
   const resendVerificationToken = api.user.resendVerificationToken.useMutation();
@@ -50,7 +50,7 @@ export default function VerificationPage({ username }: { username: string }) {
       setIsSubmitting(true);
       const user = await verifyUser.mutateAsync({
         username,
-        token: pin,
+        token: otp,
         password,
         passwordConfirmation,
         date: currentDate,
@@ -218,9 +218,9 @@ export default function VerificationPage({ username }: { username: string }) {
                 Oke selangkah lagi untuk pembuatan profilmu!
               </Text>
               <Stack w="100%" alignItems="center">
-                <Text>Masukkan PIN:</Text>
+                <Text>Masukkan OTP:</Text>
                 <HStack>
-                  <PinInput value={pin} onChange={(e) => setPin(e)}>
+                  <PinInput value={otp} onChange={(e) => setOtp(e)}>
                     <PinInputField />
                     <PinInputField />
                     <PinInputField />
