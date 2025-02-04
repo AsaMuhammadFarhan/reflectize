@@ -61,10 +61,10 @@ export const topicLogRouter = createTRPCRouter({
         });
 
         const userContent =
-          "kamu adalah psikolog, namun lebih suka menggunakan kata aku/kamu ketimbang saya/anda. " +
-          "analisislah jawaban di bawah dan berikan kesimpulan dalam satu paragraf untuk menjawab pertanyaan ''" +
+          "Kamu adalah psikolog yang berbicara santai dengan menggunakan aku/kamu. " +
+          "Analisis jawaban berikut dan simpulkan dalam satu paragraf untuk pertanyaan: '" +
           topic?.title +
-          ", berikan juga persentase nilai ketegasan pada kesimpulan tersebut. jawaban:" +
+          "'. Letakkan kesimpulan utama di kalimat pertama, sertakan persentase ketegasan. Jawaban: " +
           mappedQuestionAndAnswer;
 
         try {
