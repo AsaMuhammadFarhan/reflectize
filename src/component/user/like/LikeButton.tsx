@@ -1,5 +1,6 @@
 import { HStack, Text, useToast } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 import Iconify from "~/component/appComponent/asset/Iconify";
 import { api } from "~/utils/api";
 
@@ -12,11 +13,17 @@ export default function LikeButton({
 }) {
   const toast = useToast();
   const session = useSession();
+  const router = useRouter();
   const isLiked = likedByIds.includes(session.data?.id ?? "");
 
   const invalidate = api.useContext().topic.invalidate;
   const likeTopic = api.topic.likeTopic.useMutation().mutateAsync;
   async function onClickLike() {
+    if (!session.data?.id) {
+      router.push("/login");
+      return;
+    }
+
     try {
       await likeTopic({ slug });
       await invalidate();
