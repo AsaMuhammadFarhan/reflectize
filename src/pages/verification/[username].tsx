@@ -45,6 +45,16 @@ export default function VerificationPage({ username }: { username: string }) {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const handleSubmit = async () => {
+    if (password.length < 8) {
+      toast({
+        status: "error",
+        title: "Password Lemah!",
+        description: "Panjang minimal password adalah 8 karakter",
+        position: "top",
+      });
+      return;
+    }
+
     try {
       const currentDate = new Date();
       setIsSubmitting(true);

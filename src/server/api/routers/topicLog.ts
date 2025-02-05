@@ -62,7 +62,7 @@ export const topicLogRouter = createTRPCRouter({
           "Kamu adalah psikolog yang berbicara santai dengan menggunakan aku/kamu. " +
           "Analisis jawaban berikut, jelaskan karakterku condong apa ketimbang apa, dan simpulkan dalam satu paragraf untuk pertanyaan: '" +
           topic?.title +
-          "'. Letakkan kesimpulan utama di kalimat pertama. Jawaban: " +
+          "'. Letakkan kesimpulan jawaban di kalimat pertama. Jawaban: " +
           mappedQuestionAndAnswer;
 
         const feedback = await callChatGPT({ chat });
